@@ -8,7 +8,6 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
-    // Verifica se o usuário já existe pelo email
     const isUserEmail = await prisma.user.findUnique({
       where: {
         email,
@@ -21,10 +20,8 @@ export const createUser = async (req: Request, res: Response) => {
       });
     }
 
-    // Hash da senha
     const hashedPassword = await hash(password, 8);
 
-    // Cria o novo usuário
     const user = await prisma.user.create({
       data: {
         name,
@@ -92,7 +89,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
     console.error("Erro ao deletar usuários:", error);
     return res.status(500).json({
       message: "Erro interno ao deletar usuários",
-      error
+      error,
     });
   }
-}
+};

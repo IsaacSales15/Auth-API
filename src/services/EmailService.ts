@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
 
-// Configuração do transportador de e-mail
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -15,7 +14,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Função para enviar e-mail
 export const sendVerificationEmail = async (email: string, name: string, code: string) => {
   const mailOptions = {
     from: process.env.MAIL_USERNAME,
