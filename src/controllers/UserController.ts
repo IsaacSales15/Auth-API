@@ -4,7 +4,7 @@ import { hash } from "bcryptjs";
 import { sendVerificationEmail } from "../services/EmailService";
 import { generateCode } from "../utils/generateCode";
 
-export const createUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
@@ -21,26 +21,21 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     const hashedPassword = await hash(password, 8);
+    const code = generateCode();
 
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        isVerified: false,
+        verificationCode: code,
+        verificationExpiry: new Date(Date.now() + 10 * 60 * 1000),
       },
       select: {
         id: true,
         name: true,
         email: true,
-      },
-    });
-
-    const code = generateCode();
-    await prisma.authCode.create({
-      data: {
-        userId: user.id,
-        code: code,
-        expires_at: new Date(Date.now() + 10 * 60 * 1000),
       },
     });
 

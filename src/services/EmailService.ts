@@ -10,11 +10,15 @@ const transporter = nodemailer.createTransport({
     refreshToken: process.env.OAUTH_REFRESH_TOKEN,
   },
   tls: {
-    rejectUnauthorized: false, 
+    rejectUnauthorized: false,
   },
 });
 
-export const sendVerificationEmail = async (email: string, name: string, code: string) => {
+export const sendVerificationEmail = async (
+  email: string,
+  name: string,
+  code: string
+) => {
   const mailOptions = {
     from: process.env.MAIL_USERNAME,
     to: email,
