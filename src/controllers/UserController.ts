@@ -51,12 +51,10 @@ export const createUser = async (req: Request, res: Response) => {
       await sendVerificationEmail(user.email, user.name, code);
     } catch (emailError) {
       console.error("Erro ao enviar email:", emailError);
-      return res
-        .status(400)
-        .json({
-          message: "Usuário criado, mas erro ao enviar email",
-          error: emailError,
-        });
+      return res.status(400).json({
+        message: "Usuário criado, mas erro ao enviar email",
+        error: emailError,
+      });
     }
 
     return res.status(200).json(user);
@@ -80,3 +78,21 @@ export const getUsers = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
+
+export const deleteUsers = async (req: Request, res: Response) => {
+  try {
+    const deletedCount = await prisma.user.deleteMany();
+    console.log(`Usuários deletados: ${deletedCount.count}`);
+
+    return res.status(200).json({
+      message: "Todos os usuários foram excluídos",
+      deletedCount: deletedCount.count,
+    });
+  } catch (error) {
+    console.error("Erro ao deletar usuários:", error);
+    return res.status(500).json({
+      message: "Erro interno ao deletar usuários",
+      error
+    });
+  }
+}
